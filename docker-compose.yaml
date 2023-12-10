@@ -1,0 +1,18 @@
+version: '1'
+
+services:
+    db:
+        image: postgres:15-alpine
+        environment:
+            POSTGRES_PASSWORD: modeck
+            POSTGRES_DB: modeck
+        ports:
+            - 54320:5432
+        volumes:
+            - ./data/db:/var/lib/postgresql/data
+            - ./data/backup:/data/backup
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+            interval: 5s
+            timeout: 5s
+            retries: 5

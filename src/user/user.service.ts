@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { CreateUserDTO } from './dto/create-user.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -18,7 +17,7 @@ export class UserService {
     },
   ];
 
-  create(createUserDto: CreateUserDto) {
+  create(createUserDto: CreateUserDTO) {
     return 'This action adds a new user';
   }
 
@@ -30,7 +29,7 @@ export class UserService {
     return this.users.find((user) => user.username === username);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: number, updateUserDto: UpdateUserDTO) {
     return `This action updates a #${id} user`;
   }
 
