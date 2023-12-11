@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 dotenv.config();
 
 const source = new DataSource({
@@ -12,6 +13,7 @@ const source = new DataSource({
   migrations: ['./migrations/*.ts'],
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
+  namingStrategy: new SnakeNamingStrategy(),
 });
 
 export default source;

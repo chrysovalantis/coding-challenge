@@ -1,39 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+  ) {}
 
-  create(createUserDto: CreateUserDTO) {
-    return 'This action adds a new user';
+  async create(data: CreateUserDTO): Promise<User> {
+    const user = this.userRepository.create(data);
+    await this.userRepository.save(user);
+    return user;
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findOne(id: number): Promise<User> {
+    return await this.userRepository.findOneOrFail({ where: { id } });
   }
 
-  findOne(username: string): any {
-    return this.users.find((user) => user.username === username);
+  async update(id: number, updateUserDto: UpdateUserDTO): Promise<User> {
+    const user = await this.userRepository.findOneOrFail({ where: { id } });
+    this.userRepository.merge(user, updateUserDto);
+    return await this.userRepository.save(user);
   }
 
-  update(id: number, updateUserDto: UpdateUserDTO) {
-    return `This action updates a #${id} user`;
+  async remove(id: number): Promise<void> {
+    const user = await this.userRepository.findOneOrFail({ where: { id } });
+    await this.userRepository.remove(user);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async retrieveByEmail(email: string): Promise<User | null> {
+    return await this.userRepository
+      .createQueryBuilder()
+      .where('LOWER(email) = :email', { email: email.toLowerCase() })
+      .getOne();
   }
 }

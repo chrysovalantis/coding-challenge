@@ -20,6 +20,7 @@ async function bootstrap() {
 
   // Swagget Configuration
   const configDocs = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Coding Challenge')
     .setDescription('API for the coding challenge')
     .setVersion('1.0')

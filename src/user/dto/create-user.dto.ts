@@ -4,7 +4,7 @@ import { IsEmail, IsNotEmpty, IsStrongPassword, Length } from 'class-validator';
 export class CreateUserDTO {
   @IsNotEmpty()
   @ApiProperty()
-  readonly fullName: string;
+  readonly fullname: string;
 
   @IsNotEmpty()
   @IsEmail()
