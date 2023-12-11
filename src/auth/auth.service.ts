@@ -1,9 +1,14 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDTO } from 'src/user/dto/create-user.dto';
 import { User } from 'src/user/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class AuthService {
@@ -13,29 +18,31 @@ export class AuthService {
     private config: ConfigService,
   ) {}
 
-  async validateUser(
-    email: string,
-    pass: string,
-  ): Promise<Partial<User> | null> {
+  async validateUser(email: string, pass: string): Promise<Partial<User>> {
     const user = await this.userService.retrieveByEmail(email);
-    if (user && user.password === pass) {
-      const { password, ...result } = user;
-      return result;
+    if (!user) {
+      throw new UnauthorizedException('Email does not exist');
     }
-    return null;
+    // Check that password entered is correct
+    const verified = (await argon2.verify(user.password, pass)) as boolean;
+    if (!verified) {
+      throw new UnauthorizedException('Invalid password');
+    }
+    const { password, ...result } = user;
+    return result;
   }
 
   async register(userData: CreateUserDTO): Promise<User> {
-    // const hash: string = await argon2.hash(userData.password);
-    // const data = assoc('password', hash, userData);
+    const hash: string = await argon2.hash(userData.password);
+    const data = { ...userData, password: hash };
 
     const alreadyExists = await this.userService.retrieveByEmail(
       userData.email,
     );
     if (alreadyExists) {
-      throw new ForbiddenException('Username or Email already exists.');
+      throw new ForbiddenException('User already exists!');
     }
-    return this.userService.create(userData);
+    return this.userService.create(data);
   }
 
   async login(user: any) {

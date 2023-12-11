@@ -10,16 +10,16 @@ import {
 import { UserService } from './user.service';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('user')
+@UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: number): Promise<User> {
     return await this.userService.findOne(id);
   }
@@ -30,10 +30,5 @@ export class UserController {
     @Body() updateUserDTO: UpdateUserDTO,
   ): Promise<User> {
     return await this.userService.update(+id, updateUserDTO);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
   }
 }
