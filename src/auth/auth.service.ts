@@ -43,10 +43,9 @@ export class AuthService {
     return this.userService.create(data);
   }
 
-  async login(user: { username: string; password: string }) {
-    const fullUser = await this.userService.retrieveByEmail(user.username);
+  async login(user: User) {
     //user exists because we check it in the local strategy guard
-    const payload = { username: fullUser?.email, sub: fullUser?.id };
+    const payload = { username: user?.email, sub: user?.id };
     return {
       access_token: this.jwtService.sign(payload),
     };

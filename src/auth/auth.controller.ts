@@ -27,7 +27,7 @@ export class AuthController {
   @Post('login')
   @HttpCode(200)
   async login(@Req() req: Request): Promise<{ access_token: string }> {
-    return this.authService.login(req.user as any);
+    return this.authService.login(req.user as User);
   }
 
   @UseGuards(JwtAuthGuard)

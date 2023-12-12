@@ -108,13 +108,9 @@ describe('AuthService', () => {
   });
 
   it('should login a user', async () => {
-    const hash: string = await argon2.hash('Password');
-    jest
-      .spyOn(mockUserService, 'retrieveByEmail')
-      .mockResolvedValue({ ...user, password: hash });
     jest.spyOn(mockjwtService, 'sign').mockResolvedValue('token');
 
-    await service.login({ username: user.email, password: user.password });
+    await service.login(user);
     expect(mockjwtService.sign).toBeCalled();
   });
 });
