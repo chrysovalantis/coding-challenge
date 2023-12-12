@@ -1,6 +1,6 @@
 ## Description
 
-This repository contains the backend services for the BDSwiss coding challange
+This repository contains the backend services for the BDSwiss coding challenge
 
 ## Installation
 
@@ -49,7 +49,7 @@ $ yarn run test:cov
 
 ## Stay in touch
 
-- Author - [Chrysovalantis Christodoulou](https://www.linkedin.com/in/chrysovalantis-christodoulou-094790132/)
+Author - [Chrysovalantis Christodoulou](https://www.linkedin.com/in/chrysovalantis-christodoulou-094790132/)
 
 ## License
 
