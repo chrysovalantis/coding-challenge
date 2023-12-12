@@ -14,8 +14,8 @@ import {
   ApiForbiddenResponse,
   ApiOperation,
 } from '@nestjs/swagger';
-import { CreateUserDTO } from 'src/user/dto/create-user.dto';
-import { User } from 'src/user/entities/user.entity';
+import { CreateUserDTO } from '../user/dto/create-user.dto';
+import { User } from '../user/entities/user.entity';
 import { Request } from 'express';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
@@ -26,8 +26,8 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(200)
-  async login(@Req() req: Request) {
-    return this.authService.login(req.user);
+  async login(@Req() req: Request): Promise<{ access_token: string }> {
+    return this.authService.login(req.user as any);
   }
 
   @UseGuards(JwtAuthGuard)
