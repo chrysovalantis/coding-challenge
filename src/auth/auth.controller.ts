@@ -1,8 +1,14 @@
-import { Controller, Post, UseGuards, Get, Body, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  Body,
+  Req,
+  HttpCode,
+  Get,
+} from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local.guard';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { Request } from 'express';
 import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -10,6 +16,8 @@ import {
 } from '@nestjs/swagger';
 import { CreateUserDTO } from 'src/user/dto/create-user.dto';
 import { User } from 'src/user/entities/user.entity';
+import { Request } from 'express';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -17,8 +25,16 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
+  @HttpCode(200)
   async login(@Req() req: Request) {
     return this.authService.login(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('verify')
+  @ApiOperation({ summary: 'Verify user' })
+  async verify(): Promise<void> {
+    return;
   }
 
   @Post('register')
@@ -27,11 +43,5 @@ export class AuthController {
   @ApiOperation({ summary: 'Register' })
   async register(@Body() data: CreateUserDTO): Promise<User> {
     return this.authService.register(data);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Req() req: Request) {
-    return req.user;
   }
 }

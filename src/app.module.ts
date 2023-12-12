@@ -16,7 +16,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => ({
         type: 'postgres',
-        host: config.get<string>('DB_HOTST'),
+        host: config.get<string>('DB_HOST'),
         port: config.get<number>('DB_PORT'),
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),

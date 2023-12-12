@@ -18,6 +18,9 @@ async function bootstrap() {
     }),
   );
 
+  //enable for localhost requests
+  app.enableCors();
+
   // Swagget Configuration
   const configDocs = new DocumentBuilder()
     .addBearerAuth()
